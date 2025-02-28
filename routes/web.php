@@ -3,7 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\TaskController;
 
+Route::resource('tasks', TaskController::class);
 Route::resource('employees', EmployeeController::class);
 
 // Route::get('/', function () {
