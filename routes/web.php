@@ -7,6 +7,11 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PerformanceReviewController;
+
+Route::get('performance-reviews', [PerformanceReviewController::class, 'index'])->name('performance_reviews.index');
+Route::get('performance-reviews/create', [PerformanceReviewController::class, 'create'])->name('performance_reviews.create');
+Route::post('performance-reviews/store', [PerformanceReviewController::class, 'store'])->name('performance_reviews.store');
 
 Route::get('payroll', [PayrollController::class, 'index'])->name('payroll.index');
 Route::get('payroll/create', [PayrollController::class, 'create'])->name('payroll.create');
