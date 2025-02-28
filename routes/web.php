@@ -5,6 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\AttendanceController;
+
+Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+Route::post('attendance/clock-in', [AttendanceController::class, 'markAttendance'])->name('attendance.clock-in');
+Route::post('attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
 
 Route::resource('leaves', LeaveRequestController::class);
 Route::patch('leaves/{leave}/approve', [LeaveRequestController::class, 'approve'])->name('leaves.approve');
