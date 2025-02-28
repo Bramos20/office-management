@@ -4,6 +4,11 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\LeaveRequestController;
+
+Route::resource('leaves', LeaveRequestController::class);
+Route::patch('leaves/{leave}/approve', [LeaveRequestController::class, 'approve'])->name('leaves.approve');
+Route::patch('leaves/{leave}/reject', [LeaveRequestController::class, 'reject'])->name('leaves.reject');
 
 Route::resource('tasks', TaskController::class);
 Route::resource('employees', EmployeeController::class);
