@@ -8,6 +8,12 @@ use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceReviewController;
+use App\Http\Controllers\AssetController;
+
+Route::get('assets', [AssetController::class, 'index'])->name('assets.index');
+Route::get('assets/create', [AssetController::class, 'create'])->name('assets.create');
+Route::post('assets/store', [AssetController::class, 'store'])->name('assets.store');
+Route::post('assets/{asset}/status', [AssetController::class, 'updateStatus'])->name('assets.updateStatus');
 
 Route::get('performance-reviews', [PerformanceReviewController::class, 'index'])->name('performance_reviews.index');
 Route::get('performance-reviews/create', [PerformanceReviewController::class, 'create'])->name('performance_reviews.create');
