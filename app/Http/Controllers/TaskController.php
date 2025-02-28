@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Notifications\TaskAssignedNotification;
 
 class TaskController extends Controller
 {
@@ -27,9 +28,13 @@ class TaskController extends Controller
             'employee_id' => 'required|exists:employees,id',
             'deadline' => 'nullable|date'
         ]);
-
-        Task::create($request->all());
-        return redirect()->route('tasks.index')->with('success', 'Task assigned successfully.');
+    
+        $task = Task::create($request->all());
+    
+        // Send notification to the assigned employee
+        $task->employee->notify(new TaskAssignedNotification($task));
+    
+        return redirect()->route('tasks.index')->with('success', 'Task assigned successfully and notification sent.');
     }
 
     public function edit(Task $task)
