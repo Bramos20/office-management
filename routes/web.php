@@ -6,6 +6,11 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\PayrollController;
+
+Route::get('payroll', [PayrollController::class, 'index'])->name('payroll.index');
+Route::get('payroll/create', [PayrollController::class, 'create'])->name('payroll.create');
+Route::post('payroll/store', [PayrollController::class, 'store'])->name('payroll.store');
 
 Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 Route::post('attendance/clock-in', [AttendanceController::class, 'markAttendance'])->name('attendance.clock-in');
