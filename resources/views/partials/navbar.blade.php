@@ -3,7 +3,11 @@
         <a href="{{ route('dashboard') }}" class="font-bold text-lg">Office Management</a>
         <div>
             @auth
-                <a href="{{ route('logout') }}" class="ml-4">Logout</a>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="ml-4 text-white">Logout</button>
+                </form>
+            
             @else
                 <a href="{{ route('login') }}">Login</a>
             @endauth

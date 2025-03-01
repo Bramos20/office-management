@@ -40,6 +40,7 @@
             <select name="role" id="role" class="form-control" required>
                 <option value="employee">Employee</option>
                 <option value="manager">Manager</option>
+                <option value="hod">HOD</option>
                 <option value="admin">Admin</option>
             </select>
         </div>

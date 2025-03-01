@@ -10,14 +10,31 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::with('department')->get();
+        $user = Auth::user();
+    
+        // If the user is an admin, show all employees
+        if ($user->role === 'admin') {
+            $employees = Employee::all();
+        } 
+        // If the user is an HOD, show only employees in their department
+        elseif ($user->role === 'hod') {
+            $employees = Employee::where('department_id', $user->employee->department_id)->get();
+        } 
+        // If the user is not an admin or HOD, deny access
+        else {
+            abort(403, 'Unauthorized access.');
+        }
+    
         return view('employees.index', compact('employees'));
     }
+    
+    
 
     public function create()
     {
@@ -29,35 +46,35 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email', // Ensure email is unique in users table
+            'email' => 'required|email|unique:users,email', // Validate against users table
             'position' => 'required',
             'department_id' => 'required|exists:departments,id',
-            'role' => 'required|in:admin,manager,employee' // Validate role input
+            'role' => 'required|in:admin,manager,hod,employee' // Ensure valid role selection
         ]);
     
-        // Create a user for the employee
+        // Create a user first
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt('password'), // Default password, to be changed by user
-            'role' => $request->role
+            'password' => bcrypt('password'), // Default password
+            'role' => $request->role // Set the assigned role
         ]);
     
-        // Create the employee and link it to the user
-        Employee::create([
+        // Now create the employee and assign the user_id
+        $employee = Employee::create([
             'name' => $request->name,
             'email' => $request->email,
             'position' => $request->position,
             'department_id' => $request->department_id,
-            'user_id' => $user->id // Link employee to user
+            'user_id' => $user->id // Correctly link user_id
         ]);
     
-        // Send email to employee with a password reset link
+        // Send email to employee with password reset link
         $user->sendPasswordResetNotification($user->email);
     
         return redirect()->route('employees.index')->with('success', 'Employee added successfully. An email has been sent for password setup.');
     }
-    
+        
 
     public function edit(Employee $employee)
     {

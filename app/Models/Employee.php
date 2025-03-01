@@ -11,7 +11,7 @@ class Employee extends Model
     use HasFactory;
     use Notifiable;
 
-    protected $fillable = ['name', 'email', 'phone', 'position', 'department_id'];
+    protected $fillable = ['name', 'email', 'phone', 'position', 'department_id','user_id'];
 
     public function department()
     {
