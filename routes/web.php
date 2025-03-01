@@ -9,6 +9,12 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceReviewController;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\KPIController;
+use App\Http\Controllers\DepartmentController;
+
+Route::resource('departments', DepartmentController::class);
+
+Route::resource('kpis', KPIController::class);
 
 Route::get('assets', [AssetController::class, 'index'])->name('assets.index');
 Route::get('assets/create', [AssetController::class, 'create'])->name('assets.create');

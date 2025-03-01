@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 class EmployeeController extends Controller
 {
@@ -24,14 +29,35 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:employees',
+            'email' => 'required|email|unique:users,email', // Ensure email is unique in users table
             'position' => 'required',
-            'department_id' => 'required|exists:departments,id'
+            'department_id' => 'required|exists:departments,id',
+            'role' => 'required|in:admin,manager,employee' // Validate role input
         ]);
-
-        Employee::create($request->all());
-        return redirect()->route('employees.index')->with('success', 'Employee added successfully.');
+    
+        // Create a user for the employee
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt('password'), // Default password, to be changed by user
+            'role' => $request->role
+        ]);
+    
+        // Create the employee and link it to the user
+        Employee::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'position' => $request->position,
+            'department_id' => $request->department_id,
+            'user_id' => $user->id // Link employee to user
+        ]);
+    
+        // Send email to employee with a password reset link
+        $user->sendPasswordResetNotification($user->email);
+    
+        return redirect()->route('employees.index')->with('success', 'Employee added successfully. An email has been sent for password setup.');
     }
+    
 
     public function edit(Employee $employee)
     {
